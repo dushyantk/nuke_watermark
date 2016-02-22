@@ -1,0 +1,149 @@
+#! /usr/local/Nuke9.0v8/libnuke-9.0.8.so -nx
+#write_info Write file:"/home/dushyantk/Downloads/1449579520Prototypes2/watermark/test.%04d.png" format:"720 480 1" chans:":rgba.red:rgba.green:rgba.blue:" framerange:"1 310" fps:"0" colorspace:"default (sRGB)" datatype:"unknown" transfer:"unknown" views:"main"
+version 9.0 v8
+Gizmo {
+ tile_color 0xd1000000
+ note_font "Bitstream Vera Sans"
+ postage_stamp true
+ lock_connections true
+ addUserKnob {20 watermark l dushyant.info_watermark}
+ addUserKnob {4 opt_knob l "Watermark type" M {text image}}
+ addUserKnob {22 tdbutton l "check callbacks" -STARTLINE T "nuke.thisNode().begin(); \nnuke.toNode('Text1')\['box'].setT(nuke.Root().height());\nnuke.toNode('Text1')\['box'].setY(nuke.Root().height()-101); \nnuke.thisNode().end()\n\n# Defining a callback\ndef knobChanged():\n    n = nuke.thisNode()\n    k = nuke.thisKnob()\n\n    if k.name() == 'opt_knob':\n        if k.value() == 'text':\n            n.begin()\n            nuke.toNode('watermark_image')\['file'].setValue('')\n            n.end()\n\n            n\['w_text_knob'].setEnabled(True)\n            n\['wm_file'].setEnabled(False)\n\n            n\['tiles'].setValue(7.4)\n            n\['translate'].setValue(\[nuke.Root().width()/2, -nuke.Root().height()/2])\n            n\['rotate'].setValue(34)\n            n\['scale'].setValue(6.3)\n            nuke.message('set to text')\n        elif k.value() == 'image':\n            n.begin()\n\n            nuke.toNode('watermark_image')\['file'].fromScript('\[value parent.wm_file]')\n            n.end()\n            n\['w_text_knob'].setEnabled(False)\n            n\['wm_file'].setEnabled(True)\n\n            n\['tiles'].setValue(7.4)\n            n\['translate'].setValue(\[0, 0])\n            n\['rotate'].setValue(0)\n            n\['scale'].setValue(1)\n            nuke.message('set to image')\n\n#Adding callback\nnuke.removeKnobChanged(knobChanged, nodeClass='dushyant.info_watermark_node')\n\nnuke.addKnobChanged(knobChanged, nodeClass='dushyant.info_watermark_node')\nnuke.message('Callbacks checked')"}
+ addUserKnob {1 w_text_knob l text}
+ w_text_knob test
+ addUserKnob {2 wm_file l "watermark file" +DISABLED}
+ addUserKnob {26 divName l "" +STARTLINE}
+ addUserKnob {12 offset}
+ offset {-14 0}
+ addUserKnob {14 tiles R 0 100}
+ tiles 13.5
+ addUserKnob {26 divName2 l "" +STARTLINE}
+ addUserKnob {12 translate}
+ translate {1024 -778}
+ addUserKnob {7 rotate}
+ rotate 34
+ addUserKnob {14 scale R 0 100}
+ scale 6.3
+ addUserKnob {7 opacity}
+ opacity 0.185
+ addUserKnob {26 divName3 l "" +STARTLINE}
+ addUserKnob {22 wbutton l "Open Output settings" -STARTLINE T "nuke.thisNode().begin(); nuke.show(nuke.toNode('Write')); nuke.thisNode().end()"}
+ addUserKnob {41 out_file l "output file" T Write.file}
+}
+ Read {
+  inputs 0
+  name watermark_image
+  xpos -40
+  ypos -156
+ }
+ Transform {
+  translate {{parent.translate} {parent.translate}}
+  rotate {{parent.rotate}}
+  scale {{parent.scale}}
+  center {{watermark_image.bbox.r+(watermark_image.bbox.x-watermark_image.bbox.r)/2} {watermark_image.bbox.y+(watermark_image.bbox.t-watermark_image.bbox.y)/2}}
+  name Transform2
+  xpos -40
+  ypos -60
+ }
+ Text2 {
+  inputs 0
+  font_size_toolbar 100
+  font_width_toolbar 100
+  font_height_toolbar 100
+  opacity {{parent.opacity}}
+  message "\[value parent.w_text_knob]"
+  old_message {{116 101 115 116}
+    }
+  old_expression_markers {{0 3}
+    }
+  box {0 1455 164 1556}
+  transforms {{0 2}
+    }
+  cursor_position 26
+  scale {1 1}
+  center {1024 778}
+  cursor_initialised true
+  initial_cursor_position {{0 1556}
+    }
+  group_animations {{0} imported: 0 selected: 0 items: "root transform/"}
+  animation_layers {{1 11 1024 778 0 0 1 1 0 0 0 0}
+    }
+  name Text1
+  xpos -339
+  ypos -92
+ }
+set N45a27b0 [stack 0]
+ Transform {
+  translate {{parent.translate} {parent.translate}}
+  rotate {{parent.rotate}}
+  scale {{parent.scale} {parent.scale}}
+  center {{Text1.bbox.r+(Text1.bbox.x-Text1.bbox.r)/2} {Text1.bbox.y+(Text1.bbox.t-Text1.bbox.y)/2}}
+  name Transform1
+  xpos -339
+  ypos -24
+ }
+ Switch {
+  inputs 2
+  which {{parent.opt_knob}}
+  name img_switch
+  xpos -40
+  ypos -24
+ }
+set N4611470 [stack 0]
+ Expression {
+  expr0 ((x-offset.x)<0?1+((x-offset.x)/width*tiles.w)-int((x-offset.x)/width*tiles.w):((x-offset.x)/width*tiles.w)-int((x-offset.x)/width*tiles.w))
+  expr1 ((y-offset.y)<0?1+((y-offset.y)/height*tiles.h)-int((y-offset.y)/height*tiles.h):((y-offset.y)/height*tiles.h)-int((y-offset.y)/height*tiles.h))
+  expr2 0
+  channel3 {none none none -rgba.alpha}
+  name offset_xp
+  xpos -40
+  ypos 59
+ }
+push $N4611470
+ Dot {
+  name Dot1
+  xpos 151
+  ypos -21
+ }
+ STMap {
+  inputs 2
+  uv rgb
+  blur_scale 0
+  name STMap1
+  xpos -40
+  ypos 171
+ }
+ Input {
+  inputs 0
+  name Input1
+  xpos 362
+  ypos 177
+ }
+ Merge {
+  inputs 2
+  name Merge1
+  xpos 181
+  ypos 177
+ }
+ Write {
+  file /home/dushyantk/Downloads/1449579520Prototypes2/watermark/test.%04d.png
+  checkHashOnRead false
+  name Write
+  xpos 181
+  ypos 250
+ }
+ Output {
+  name Output1
+  xpos 181
+  ypos 317
+ }
+push $N45a27b0
+ Viewer {
+  frame 1
+  frame_range 1-310
+  name Viewer1
+  selected true
+  xpos -339
+  ypos 192
+ }
+end_group
