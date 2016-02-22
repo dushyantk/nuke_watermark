@@ -121,7 +121,7 @@ def watermark_proc(in_node, w_type, w_text, w_file, w_path):
     in_node_name = in_node['name'].getValue()
 
     with nuke.Root():
-        watermark = nuke.createNode('dushyant.info_watermark_node')
+        watermark = nuke.createNode('dushyant_info_watermark_node')
 
         print watermark
         is_text = False
@@ -221,9 +221,9 @@ def knobChanged():
             n['scale'].setValue(1)
 
 #Adding callback
-nuke.removeKnobChanged(knobChanged, nodeClass='dushyant.info_watermark_node')
+nuke.removeKnobChanged(knobChanged, nodeClass='dushyant_info_watermark_node')
 
-nuke.addKnobChanged(knobChanged, nodeClass='dushyant.info_watermark_node')
+nuke.addKnobChanged(knobChanged, nodeClass='dushyant_info_watermark_node')
 
 def main(what, type, text, file, path):
 
