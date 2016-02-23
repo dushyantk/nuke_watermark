@@ -1,6 +1,6 @@
 # Developed by Dushyant
 # Known limitations: works only on selected read nodes 
-# Github repo dushyantk/vfxPlumber/ (https://github.com/dushyantk/vfxPlumber/blob/master/python/utils/nuke/graphUtils.py) can be used to walk up the graph and condition @ line 229 can be skipped
+# Github repo dushyantk/vfxPlumber/ (https://github.com/dushyantk/vfxPlumber/blob/master/python/utils/nuke/graphUtils.py) can be used to walk up the graph and condition @ line 235 can be skipped
 
 from __future__ import with_statement
 
