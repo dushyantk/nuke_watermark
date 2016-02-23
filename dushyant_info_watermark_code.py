@@ -134,7 +134,8 @@ def watermark_proc(in_node, w_type, w_text, w_file, w_path):
 
 
         #Setting knobs
-        # calling write node from the Gizmo
+        # calling nodes from the Gizmo
+        w_read = nuke.toNode( '%s.watermark_image' % watermark.name() )
         w_write = nuke.toNode( '%s.Write' % watermark.name() )
         print w_write
         # Processing write node paths
@@ -165,6 +166,7 @@ def watermark_proc(in_node, w_type, w_text, w_file, w_path):
             watermark['opt_knob'].setValue(0)
             watermark['w_text_knob'].setValue(w_text) #This is the text knob string on group node
             watermark['wm_file'].setValue('')
+            w_read['file'].setValue('')
 
             watermark['translate'].setValue([nuke.Root().width()/2, -nuke.Root().height()/2])
             watermark['rotate'].setValue(34)
@@ -176,6 +178,7 @@ def watermark_proc(in_node, w_type, w_text, w_file, w_path):
             watermark['w_text_knob'].setEnabled(False)
             watermark['opt_knob'].setValue(1)
             watermark['wm_file'].fromScript(w_file)
+            w_read['file'].fromScript('[value parent.wm_file]')
 
             watermark['translate'].setValue([0, 0])
             watermark['rotate'].setValue(0)
@@ -183,9 +186,6 @@ def watermark_proc(in_node, w_type, w_text, w_file, w_path):
 
         watermark['tiles'].setValue(7.4)
         watermark['opacity'].setValue(0.185)
-
-
-        nuke.message('All done!')
 
         nuke.connectViewer( 0, watermark )
 
@@ -236,3 +236,5 @@ def watermark_main(what, type, text, file, path):
             watermark_proc(selected, type, text, file, path)
         else:
             nuke.message( 'works only on read nodes, skipping %s' % selected['name'].getValue() )
+    else:
+        nuke.message('All done!')

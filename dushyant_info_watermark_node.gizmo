@@ -7,7 +7,7 @@ Gizmo {
  postage_stamp true
  lock_connections true
  addUserKnob {20 watermark l dushyant.info_watermark}
- addUserKnob {4 opt_knob l "Watermark type" M {text image}}
+ addUserKnob {4 opt_knob l "Watermark type" t "choose the type of watermark you want to use." M {text image ""}}
  addUserKnob {22 tdbutton l "check callbacks" -STARTLINE T "nuke.thisNode().begin(); \nnuke.toNode('Text1')\['box'].setT(nuke.Root().height());\nnuke.toNode('Text1')\['box'].setY(nuke.Root().height()-101); \nnuke.thisNode().end()\n\n# Defining a callback\ndef knobChanged():\n    n = nuke.thisNode()\n    k = nuke.thisKnob()\n\n    if k.name() == 'opt_knob':\n        if k.value() == 'text':\n            n.begin()\n            nuke.toNode('watermark_image')\['file'].setValue('')\n            n.end()\n\n            n\['w_text_knob'].setEnabled(True)\n            n\['wm_file'].setEnabled(False)\n\n            n\['tiles'].setValue(7.4)\n            n\['translate'].setValue(\[nuke.Root().width()/2, -nuke.Root().height()/2])\n            n\['rotate'].setValue(34)\n            n\['scale'].setValue(6.3)\n            nuke.message('set to text')\n        elif k.value() == 'image':\n            n.begin()\n\n            nuke.toNode('watermark_image')\['file'].fromScript('\[value parent.wm_file]')\n            n.end()\n            n\['w_text_knob'].setEnabled(False)\n            n\['wm_file'].setEnabled(True)\n\n            n\['tiles'].setValue(7.4)\n            n\['translate'].setValue(\[0, 0])\n            n\['rotate'].setValue(0)\n            n\['scale'].setValue(1)\n            nuke.message('set to image')\n\n#Adding callback\nnuke.removeKnobChanged(knobChanged, nodeClass='dushyant.info_watermark_node')\n\nnuke.addKnobChanged(knobChanged, nodeClass='dushyant.info_watermark_node')\nnuke.message('Callbacks checked')"}
  addUserKnob {1 w_text_knob l text}
  w_text_knob test
@@ -29,6 +29,7 @@ Gizmo {
  addUserKnob {26 divName3 l "" +STARTLINE}
  addUserKnob {22 wbutton l "Open Output settings" -STARTLINE T "nuke.thisNode().begin(); nuke.show(nuke.toNode('Write')); nuke.thisNode().end()"}
  addUserKnob {41 out_file l "output file" T Write.file}
+ addUserKnob {80 Write_disable l "disable write" t "Check this if you want to disable the write node inside." -STARTLINE}
 }
  Read {
   inputs 0
@@ -72,7 +73,7 @@ Gizmo {
   xpos -339
   ypos -92
  }
-set N45a27b0 [stack 0]
+set N4962690 [stack 0]
  Transform {
   translate {{parent.translate} {parent.translate}}
   rotate {{parent.rotate}}
@@ -89,7 +90,7 @@ set N45a27b0 [stack 0]
   xpos -40
   ypos -24
  }
-set N4611470 [stack 0]
+set N3ff56a0 [stack 0]
  Expression {
   expr0 ((x-offset.x)<0?1+((x-offset.x)/width*tiles.w)-int((x-offset.x)/width*tiles.w):((x-offset.x)/width*tiles.w)-int((x-offset.x)/width*tiles.w))
   expr1 ((y-offset.y)<0?1+((y-offset.y)/height*tiles.h)-int((y-offset.y)/height*tiles.h):((y-offset.y)/height*tiles.h)-int((y-offset.y)/height*tiles.h))
@@ -99,7 +100,7 @@ set N4611470 [stack 0]
   xpos -40
   ypos 59
  }
-push $N4611470
+push $N3ff56a0
  Dot {
   name Dot1
   xpos 151
@@ -129,20 +130,20 @@ push $N4611470
   file /home/dushyantk/Downloads/1449579520Prototypes2/watermark/test.%04d.png
   checkHashOnRead false
   name Write
+  selected true
   xpos 181
   ypos 250
+  disable {{parent.Write_disable}}
  }
  Output {
   name Output1
   xpos 181
   ypos 317
  }
-push $N45a27b0
+push $N4962690
  Viewer {
-  frame 1
   frame_range 1-310
   name Viewer1
-  selected true
   xpos -339
   ypos 192
  }
