@@ -1,6 +1,6 @@
 # Developed by Dushyant
 # Known limitations: works only on selected read nodes 
-# Github repo dushyantk/vfxPlumber/graph_search can be used to walk up the graph and condition @ line 229 can be skipped
+# Github repo dushyantk/vfxPlumber/ (https://github.com/dushyantk/vfxPlumber/blob/master/python/utils/nuke/graphUtils.py) can be used to walk up the graph and condition @ line 229 can be skipped
 
 from __future__ import with_statement
 
@@ -65,7 +65,7 @@ class WatermarkUtilityPanel( nukescripts.PythonPanel ):
             nuke.message('the output path specified doesn\'t exists, exiting now')
             return 1
         
-        self.matches = main( srcNodes[self.nodesChoice.value()], self.w_type, self.w_text, self.w_file, self.w_path )
+        self.matches = watermark_main( srcNodes[self.nodesChoice.value()], self.w_type, self.w_text, self.w_file, self.w_path )
 
     def knobChanged( self, knob ):
         # PERFORM CHECKS
@@ -225,7 +225,7 @@ nuke.removeKnobChanged(knobChanged, nodeClass='dushyant_info_watermark_node')
 
 nuke.addKnobChanged(knobChanged, nodeClass='dushyant_info_watermark_node')
 
-def main(what, type, text, file, path):
+def watermark_main(what, type, text, file, path):
 
     deselect()
     if len(what) == 0:
